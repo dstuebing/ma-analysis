@@ -20,7 +20,9 @@ commits.forEach(commit => {
         const trackingData = fs.readFileSync(resultLocation + '/' + commit + '/Tracking/' + cluster, 'utf8')
         const lshData = fs.readFileSync(resultLocation + '/' + commit + '/LSH/' + cluster, 'utf8')
         const trackingDataLines = trackingData.split(/\r\n|\r|\n/).filter(line => line != "" && line != "\x1A");
-        const lshDataLines = lshData.split(/\r\n|\r|\n/).filter(line => line != "" && line != "\x1A");
+        let lshDataLines = lshData.split(/\r\n|\r|\n/).filter(line => line != "" && line != "\x1A");
+        // get rid of same pairs
+        lshDataLines = Array.from(new Set(lshDataLines));
 
         // true positives inside the current cluster
         let truePositives = 0;
