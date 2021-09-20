@@ -6,6 +6,7 @@ const resultLocation = 'L:/Dokumente/AllResults';
 let maximumNumberOfShingles = 0;
 let minimumNumberOfShingles = 100000000;
 
+let totalNumberOfPairs = 0;
 
 const commits = fs.readdirSync(resultLocation)
 
@@ -14,7 +15,6 @@ commits.forEach(commit => {
     const twoNumbers = fs.readFileSync(resultLocation + '/' + commit + '/ShingleNumbers/shingleNumbers.txt', 'utf8')
     if (twoNumbers !== "2147483647,0") {
         const split = twoNumbers.split(",");
-        console.log(split)
 
         if (split[0] < minimumNumberOfShingles) {
             minimumNumberOfShingles = parseInt(split[0])
@@ -25,8 +25,16 @@ commits.forEach(commit => {
         }
     }
 
+    // also print the total number of candidates
+    const clusters = fs.readdirSync(resultLocation + '/' + commit + '/Pairs');
+
+    clusters.forEach(cluster => {
+        const currentNumber = parseInt(fs.readFileSync(resultLocation + '/' + commit + '/Pairs/' + cluster, 'utf8'))
+        totalNumberOfPairs += currentNumber
+    })
 })
 
 
 console.log("MIN: " + minimumNumberOfShingles);
 console.log("MAX: " + maximumNumberOfShingles);
+console.log("#pairs: " + totalNumberOfPairs)
