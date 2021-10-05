@@ -18,6 +18,7 @@ commits.forEach(commit => {
     clusters.forEach(cluster => {
 
         const trackingData = fs.readFileSync(resultLocation + '/' + commit + '/Tracking/' + cluster, 'utf8')
+        // in the below path, 'LSH' can be replaced with 'Candidates'
         const lshData = fs.readFileSync(resultLocation + '/' + commit + '/LSH/' + cluster, 'utf8')
         const trackingDataLines = trackingData.split(/\r\n|\r|\n/).filter(line => line != "" && line != "\x1A");
         let lshDataLines = lshData.split(/\r\n|\r|\n/).filter(line => line != "" && line != "\x1A");
