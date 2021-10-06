@@ -8,6 +8,8 @@ let overallTruePositives = 0;
 let overallFalseNegatives = 0;
 let overallFalsePositives = 0;
 
+// contains for each strategy (1-5) the number of pairs it matched
+const matchingStrategies = [0, 0, 0, 0, 0]
 
 const commits = fs.readdirSync(resultLocation)
 
@@ -29,11 +31,13 @@ commits.forEach(commit => {
         let truePositives = 0;
 
         trackingDataLines.forEach(line => {
-            if (lshDataLines.includes(line)) {
-                const indexToDelete = lshDataLines.findIndex(otherLine => { return line == otherLine });
+            const lineWithoutStrategy = line.slice(0, -2)
+            if (lshDataLines.includes(lineWithoutStrategy)) {
+                const indexToDelete = lshDataLines.findIndex(otherLine => { return lineWithoutStrategy == otherLine });
                 lshDataLines.splice(indexToDelete, 1);
                 truePositives++;
             }
+            matchingStrategies[Number(line.slice(-1)) - 1]++;
         })
 
         // false result within the current cluster
@@ -65,3 +69,5 @@ console.log("true positives: " + overallTruePositives)
 console.log("false negatives (missing): " + overallFalseNegatives)
 console.log("false positives (too much): " + overallFalsePositives)
 console.log()
+
+console.log("Number of matched pairs for each strategy: " + matchingStrategies)
