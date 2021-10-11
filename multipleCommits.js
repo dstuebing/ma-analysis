@@ -19,6 +19,7 @@ commits.forEach(commit => {
 
     clusters.forEach(cluster => {
 
+        // in the below path, 'Tracking' can be replaced with 'Solutions'
         const trackingData = fs.readFileSync(resultLocation + '/' + commit + '/Tracking/' + cluster, 'utf8')
         // in the below path, 'LSH' can be replaced with 'Candidates'
         const lshData = fs.readFileSync(resultLocation + '/' + commit + '/LSH/' + cluster, 'utf8')
@@ -31,12 +32,14 @@ commits.forEach(commit => {
         let truePositives = 0;
 
         trackingDataLines.forEach(line => {
+            // TODO uncomment slice part for 'Solutions' comparison
             const lineWithoutStrategy = line.slice(0, -2)
             if (lshDataLines.includes(lineWithoutStrategy)) {
                 const indexToDelete = lshDataLines.findIndex(otherLine => { return lineWithoutStrategy == otherLine });
                 lshDataLines.splice(indexToDelete, 1);
                 truePositives++;
             }
+            // TODO uncomment for 'Solutions' comparison
             matchingStrategies[Number(line.slice(-1)) - 1]++;
         })
 

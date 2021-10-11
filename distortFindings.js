@@ -10,10 +10,6 @@ const projectPath = "L:/testprojekte/eigen/ma-test-project"
 let jsonFileContent = fs.readFileSync('findings-test.json', 'utf8')
 // End TODO
 
-// fixing the problem that TS gives this a name with a space
-jsonFileContent = jsonFileContent.replace(/Finding ID/g, 'FindingID')
-
-
 
 // Step 1: cluster findings by their file names
 const jsonParsed = JSON.parse(jsonFileContent)
