@@ -30,6 +30,11 @@ jsonParsed.forEach(finding => {
 
 // Step 2: make changes to the file system and accordingly to the line nrs of the findings in the map
 for (let path of findingsByPathMap.keys()) {
+    // leave 50 % of files alone
+    if (getRandomInt(2) == 0) {
+        continue
+    }
+
     // get file content and split it into lines
     const fileContent = fs.readFileSync(projectPath + '/' + path, 'utf8')
     const lines = fileContent.split("\n")
@@ -49,6 +54,10 @@ for (let path of findingsByPathMap.keys()) {
         for (let finding of findingsArray) {
             //finding = findingsArray[0]
             const startAndEnd = determineStartAndEndOfFinding(finding)
+            if (startAndEnd == undefined) {
+                // some findings (e.g., architecture, file size) have no start & end -> no need to update
+                continue
+            }
             const start = startAndEnd[0]
             const end = startAndEnd[1]
             if (indexToAddLine <= start) {
