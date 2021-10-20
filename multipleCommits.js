@@ -19,24 +19,28 @@ commits.forEach(commit => {
 
     clusters.forEach(cluster => {
 
-        // in the below path, 'Tracking' can be replaced with 'Solutions'
-        const trackingData = fs.readFileSync(resultLocation + '/' + commit + '/Tracking/' + cluster, 'utf8')
-        // in the below path, 'LSH' can be replaced with 'Candidates'
-        const lshData = fs.readFileSync(resultLocation + '/' + commit + '/LSH/' + cluster, 'utf8')
-        const trackingDataLines = trackingData.split(/\r\n|\r|\n/).filter(line => line != "" && line != "\x1A");
-        let lshDataLines = lshData.split(/\r\n|\r|\n/).filter(line => line != "" && line != "\x1A");
+        // read baseline data (e.g., Tracking) and test data (e.g., LSH) 
+        const baselineData = fs.readFileSync(resultLocation + '/' + commit + '/Tracking/' + cluster, 'utf8')
+        const testData = fs.readFileSync(resultLocation + '/' + commit + '/LSH/' + cluster, 'utf8')
+
+        // split into lines
+        let baselineDataLines = baselineData.split(/\r\n|\r|\n/).filter(line => line != "" && line != "\x1A");
+        let testDataLines = testData.split(/\r\n|\r|\n/).filter(line => line != "" && line != "\x1A");
+
         // get rid of same pairs
-        lshDataLines = Array.from(new Set(lshDataLines));
+        baselineDataLines = Array.from(new Set(baselineDataLines));
+        testDataLines = Array.from(new Set(testDataLines));
 
         // true positives inside the current cluster
         let truePositives = 0;
 
-        trackingDataLines.forEach(line => {
+        // for each baseline data line: check if also in test data
+        baselineDataLines.forEach(line => {
             // TODO uncomment slice part for 'Solutions' comparison
             const lineWithoutStrategy = line.slice(0, -2)
-            if (lshDataLines.includes(lineWithoutStrategy)) {
-                const indexToDelete = lshDataLines.findIndex(otherLine => { return lineWithoutStrategy == otherLine });
-                lshDataLines.splice(indexToDelete, 1);
+            if (testDataLines.includes(lineWithoutStrategy)) {
+                const indexToDelete = testDataLines.findIndex(otherLine => { return lineWithoutStrategy == otherLine });
+                testDataLines.splice(indexToDelete, 1);
                 truePositives++;
             }
             // TODO uncomment for 'Solutions' comparison
@@ -44,8 +48,8 @@ commits.forEach(commit => {
         })
 
         // false result within the current cluster
-        const falseNegatives = trackingDataLines.length - truePositives;
-        const falsePositives = lshDataLines.length;
+        const falseNegatives = baselineDataLines.length - truePositives;    // everything that is in baseline, but not in test is false negative
+        const falsePositives = testDataLines.length;                        // true positives were deleted, rest is false positives
 
         overallTruePositives += truePositives;
         overallFalseNegatives += falseNegatives;
