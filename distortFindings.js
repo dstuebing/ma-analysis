@@ -1,13 +1,12 @@
 const fs = require('fs');
-const LoremIpsum = require("lorem-ipsum").LoremIpsum;
 const types = ["int", "String", "double", "boolean", "char"]
 const operators = ["+", "-", "*", "/", "."]
-const lorem = new LoremIpsum()
-const names = lorem.generateWords(100).split(" ");
+const randomWords = require('random-words');
+const names = Array.from(new Set(randomWords(3000)))
 
 // TODO adapt path and file name to the used project and its name
-const projectPath = "L:/testprojekte/eigen/ma-test-project"
-let jsonFileContent = fs.readFileSync('findings-test.json', 'utf8')
+const projectPath = "L:/tsma"
+let jsonFileContent = fs.readFileSync('findings-tsma.json', 'utf8')
 // End TODO
 
 
