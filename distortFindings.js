@@ -1,4 +1,7 @@
 const fs = require('fs');
+// set seed for Math.random
+const seedrandom = require('seedrandom');
+seedrandom('hello.', { global: true });
 const types = ["int", "String", "double", "boolean", "char"]
 const operators = ["+", "-", "*", "/", "."]
 const randomWords = require('random-words');
@@ -29,8 +32,8 @@ jsonParsed.forEach(finding => {
 
 // Step 2: make changes to the file system and accordingly to the line nrs of the findings in the map
 for (let path of findingsByPathMap.keys()) {
-    // leave 50 % of files alone
-    if (getRandomInt(2) == 0) {
+    // leave 90% of files alone
+    if (getRandomInt(10) !== 0) {
         continue
     }
 
@@ -41,8 +44,8 @@ for (let path of findingsByPathMap.keys()) {
     // the findings in the file at the given path
     const findingsArray = findingsByPathMap.get(path);
 
-    // add some lines to file
-    const numberOfLinesToAdd = Math.ceil(lines.length / 5)
+    // add 10% new lines to file
+    const numberOfLinesToAdd = Math.ceil(lines.length / 10)
     for (let i = 0; i < numberOfLinesToAdd; i++) {
         // add random line at random line
         const indexToAddLine = getRandomInt(lines.length) + 1
